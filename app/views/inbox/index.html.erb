@@ -1,0 +1,12 @@
+<%= render :partial => "profile" %>
+
+<div class="row-fluid span8 profile-rightside">
+  <%= render :partial => "head" %>
+
+  <div class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+    <%= render :partial => "tabs_panel" %>
+    <div id="tabs-messages" class="ui-tabs-panel ui-widget-content ui-corner-bottom">
+      <%= render "messages" %>
+    </div>
+  </div>
+</div>

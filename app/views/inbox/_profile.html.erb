@@ -1,0 +1,125 @@
+<div class="profile-leftside">
+  <div class="profile-userwall">
+
+    <%= render "/users/avatar_uploader", :user => current_user %>
+    <% if @profile.present? %>
+      <div class="user-links">
+        <% if current_user && current_user.username == @profile.username %>
+          <a data-original-title="Edit Profile" rel="tooltip" class="btn btn-primary" onmouseout="$('#edit-profile-icon').show();$('#edit-profile-text').hide();" onmouseover="$('#edit-profile-text').show();$('#edit-profile-icon').hide();" data-toggle="modal" data-target="#myModal" id="edit-profile">
+            <span id="edit-profile-text" class="hide">Edit Profile</span>
+            <i id="edit-profile-icon" class="icon-pan-hand"></i>
+          </a>
+        <%end %>
+
+        <% if current_user.id == @profile.id or current_user.friends? @profile %>
+          <!--a href="#BondsModel" data-toggle="modal" style="padding: 8px 3px 8px 15px;" class="btn btn-primary">Bonds | <span id="followers"><%= @followers_count %> <i class="icon-leaf"></i></span></a-->
+          <a data-original-title="Bonds list" rel="tooltip" href="#BondsModel" data-toggle="modal" style="padding: 8px 3px 8px 15px;" class="btn btn-primary">Bonds | <span id="bondscount"><%= @friends.count %> <i class="icon-leaf"></i></span></a>
+        <% end %>
+
+        <% if current_user.id == @profile.id or current_user.follows? @profile %>
+
+          <!--a id="shoulders_list" data-original-title="Shoulders list" rel="tooltip" href="#ShouldersModel" data-toggle="modal" style="padding: 8px 3px 8px 15px;" class="btn btn-primary">Shoulders | <span id="followers"><%= @followers_count %> <i class="icon-fire"></i></span></a-->
+        <% else %>
+          <!--a id="shoulders_list" data-original-title="Shoulders list" rel="tooltip" href="#ShouldersModel" data-toggle="modal" style="display: none; padding: 8px 3px 8px 15px;" class="btn btn-primary">Shoulders | <span id="followers"><%= @followers_count %> <i class="icon-fire"></i></span></a-->
+        <% end %>
+
+        <% unless current_user && current_user.id == @profile.id  %>
+          <% if @followcheck==0 %>
+            <%#= link_to "Provide Shoulder", "/togglefollow/#{@profile.username}",:id=>"followbutton",  :class => "btn btn-primary",  :onclick => "disable_follow_button()", :onComplete =>"enable_follow_button()",   :remote => true, 'data-original-title' => "Provide Shoulder", :rel => "tooltip" %>
+          <% else %>
+            <%#= link_to "Remove Shoulder", "/togglefollow/#{@profile.username}", :id=>"followbutton", :class => "btn btn-primary", :remote => true, 'data-original-title' => "Remove Shoulder", :rel => "tooltip" %>
+          <% end %>
+          <%= render :partial => "shared/friend_request_form" %>
+
+        <%end %>
+
+        <% if current_user.id == @profile.id %>
+          <a href="#friendrequests"  data-toggle="modal" style="background: none;margin: 0;padding: 0;float: none; text-decoration: none;">
+            <img src="/assets/login.png" data-original-title="Bonds Request" rel="tooltip" />
+            <% if @friendship_requests.count > 0 %>
+              <span title="Unread FriendRequests" class="qvnew"><%= @friendship_requests.count %></span>
+            <% end %>
+          </a>
+          <%= image_tag("ep.png", :style => "cursor: pointer; margin-left: 2px;", :onclick => "goTo('#{posts_timeline_index_path}')", 'data-original-title' => "Archive posts", :rel => "tooltip") %>
+          <a href="<%= mailboxes_path %>" style="background: none;margin: 0;padding: 0;text-decoration: none;width: 32px;">
+            <img src="/assets/inbox.png" style="cursor: pointer;" data-original-title="Send a message" rel="tooltip"/>
+            <%- unread_messages = current_user.unread_messages.count -%>
+            <% if unread_messages > 0 %>
+              <span rel="tooltip" data-original-title="Unread Messages" class="qvnew1"><%= unread_messages %></span>
+            <% end %>
+          </a>
+          <%= image_tag("post.png", :style => "cursor: pointer; width: 24px;", :onclick => "goTo('#{new_post_timeline_index_path}')", :id => "tour3", 'data-original-title' => "New Post", :rel => "tooltip") %>
+
+          <%= render :partial => "timeline/bond_request" %>
+
+          <style>
+            .qvnew{
+              padding: 2px 5px;
+              color: #fff!important;
+              -webkit-border-radius: 3px;
+              -moz-border-radius: 3px;
+              border-radius: 3px;
+              font-weight: bold!important;
+              background-color: #FE642E!important;
+              margin: 8px 0;
+              position: relative;
+              top: 28px;
+              right: 26px;
+              float: left;
+            }
+            .qvnew1{
+              padding: 2px 5px;
+              color: #fff!important;
+              -webkit-border-radius: 3px;
+              -moz-border-radius: 3px;
+              border-radius: 3px;
+              font-weight: bold!important;
+              background-color: #FE642E!important;
+              margin: 8px 0;
+              position: relative;
+              top: -2px;
+              right: 0;
+              left: 18px;
+            }
+            .modal-body{
+              font-size: 14px;
+              line-height: 20px;
+            }
+            .modal-body a{
+              padding: 4px 12px !important;
+              float: none !important;
+            }
+          </style>
+
+        <% end %>
+
+      </div>
+
+      <div class="user-name-link">
+        <%= link_to @profile.username, "/profile/#{@profile.username}" %>
+      </div>
+
+    </div>
+
+
+    <div class="profile-userwall bc-class">
+      <div class="discussion">
+        Following Discussion <br>
+        <% userhash = getUserLog(@profile.id) %>
+        <% userhash.each do |key, value| %>
+          <% value.each do |id,story| %>
+            <%= story %>    <%#= link_to findUserName(id), "/profile/#{findUserName(id)}" %>
+            <!--'s-->
+            <%= link_to "/show_post/#{id.id}" do  %>
+              <%= truncate(id.story, :length => 30) %>
+            <%end %>
+
+          <% end %>
+          <%#= distance_of_time_in_words_to_now(key) %><!-- ago  --><br/>
+        <% end %>
+      </div>
+    </div>
+
+  <% end %>
+
+</div>

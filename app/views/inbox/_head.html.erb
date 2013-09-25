@@ -1,0 +1,20 @@
+<% #content_for :head do %>
+	<%#= stylesheet_link_tag "mailboxes" %>
+    <%#= javascript_include_tag "mailboxes" %>
+    
+    <%# if controller.action_name == "new" -%>
+    <%= stylesheet_link_tag "token-input-facebook" %>
+    <%= javascript_include_tag "jquery.tokeninput" %>
+    <script type="text/javascript">
+    	
+		$(document).ready(function() {
+			$("#user_tokens").tokenInput("/inbox/token.json", {
+			    crossDomain: false,
+                prePopulate: <%= prepopulate_data %>,
+			    theme: "facebook"
+			});
+		});
+		
+	</script>
+    <%# end -%>
+<% #end %>

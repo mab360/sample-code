@@ -1,0 +1,25 @@
+<ul id="myTabs" class="nav nav-tabs">
+    <li class="active">
+    	<%= link_to "Inbox", box_mailboxes_path(:inbox), :remote => true, :class => "active", :id => "inbox_tab" %>
+    </li>
+    <li class="">
+    	<%= link_to "Outbox", box_mailboxes_path(:outbox), :remote => true, :id => "inbox_tab" %>
+    </li>
+    <li class="">
+    	<%= link_to "Trash",  box_mailboxes_path(:trash), :remote => true, :id => "inbox_tab" %>
+    </li>
+</ul>
+<style>
+  .user-name-link {
+    float: left;
+    overflow: hidden;
+    padding-left: 60px;
+    width: 212px;
+    padding-top: 5px;
+  }
+  .user-name-link a {
+    color: #84623A;
+    font-size: 22px;
+    text-decoration: none;
+  }
+</style>
